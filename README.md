@@ -1,3 +1,170 @@
+# DES (Data Encryption Standard) Implementation in Go
+
+## Project Description
+
+This project implements the **DES (Data Encryption Standard)** algorithm from scratch in Go, without using pre-built cryptography libraries. DES is a symmetric encryption algorithm that uses a block cipher, operating on 64-bit blocks with a 56-bit effective key (64-bit with parity).
+
+## How the DES Algorithm Works
+
+DES is based on the Feistel Lattice and performs the following main steps:
+
+### 1. Key Generation
+- The 64-bit key is reduced to 56 bits through PC-1 permutation
+- It is divided into two 28-bit halves
+- It generates 16 48-bit subkeys through rotations and PC-2 permutation
+
+### 2. Encryption Process
+- Initial Permutation (IP): Rearranges the 64 bits of the data block
+- 16 Feistel Rounds: Each round applies:
+- Division of the block into two halves (L and R)
+- Function f applied to the right half with the round's subkey
+- XOR of the result with the left half
+- Swap the halves
+- Final Permutation (FP): Final rearrangement of the bits
+
+### 3. Function f (Kernel) (DES)
+- **E Expansion**: Expands 32 bits to 48 bits
+- **XOR**: With the 48-bit subkey
+- **S-boxes**: 8 substitution boxes that reduce 48 bits to 32 bits
+- **P Permutation**: Rearranges the resulting 32 bits
+
+### 4. Decryption
+- Same process as encryption, but with the subkeys applied in reverse order
+
+## Implementation Features
+
+### Implemented Features
+- ✅ Complete generation of all 16 subkeys
+- ✅ All permutations (IP, FP, E, P)
+- ✅ All 8 S-boxes of the DES standard
+- ✅ Full Feistel functionality
+- ✅ PKCS#7 padding for messages of any length
+- ✅ ECB (Electronic Codebook) mode
+- ✅ Simple interface for Encryption/Decryption
+
+### Data Structures
+- **Permutation Tables**: IP, FP, E, P, PC-1, PC-2
+- **S-boxes**: 8 4×16 substitution tables
+- **Rotations**: Number of rotations per round
+
+## How to Run
+
+### Prerequisites
+- Go 1.19 or higher installed
+- Operating System: Windows, Linux, or macOS
+
+### Installation and Running
+
+1. **Clone the repository:**
+```bash
+git clone <REPOSITORY_URL>
+cd des-cipher-go
+```
+
+2. **Run the program:**
+```bash
+go run main.go
+```
+
+3. **Or compile and run:**
+```bash
+go build -o des-cipher main.go
+./des-cipher
+```
+
+## Example Usage
+
+```go
+package main
+
+import (
+"fmt"
+"encoding/hex"
+)
+
+func main() {
+// 8-byte (64-bit) key
+key := []byte("KEY123")
+
+// Message to be encrypted
+plaintext := "Secret message!"
+
+// Create an instance of DES
+des, err := NewDES(key)
+if err != nil {
+panic(err)
+}
+
+// Encrypt the message
+ciphertext := des.Encrypt([]byte(plaintext))
+fmt.Printf("Encrypted: %s\n", hex.EncodeToString(ciphertext))
+
+// Decrypt the message
+decrypted := des.Decrypt(ciphertext)
+fmt.Printf("Decrypted: %s\n", string(decrypted))
+}
+```
+
+## Demonstration
+
+The program includes:
+- **Automatic example**: Demonstrates the encryption of a predefined message
+- **Interactive mode**: Allows the user to enter a custom message
+- **Verification**: Confirms that the decryption returns the plaintext
+- **Hexadecimal display**: Displays the ciphertext in hexadecimal format
+
+## Security and Limitations
+
+### ⚠️ Important Notice
+This implementation is **for educational purposes only**. DES is considered **insecure** for production use due to:
+- Only 56-bit key (easily cracked by brute force)
+- Known vulnerabilities
+- Replaced by more secure algorithms (AES, 3DES)
+
+### Implementation Limitations
+- **ECB mode only**: Does not implement more secure modes (CBC, CTR)
+- **No authentication**: Does not include integrity checking
+- **Performance**: Optimized for clarity, not speed
+
+## Project Structure
+
+```
+des-cipher-go/
+├── main.go # Main code with complete implementation
+├── README.md # This documentation
+```
+
+## Demonstrated Concepts
+
+- **Symmetric Encryption**: Same key for encryption and decryption
+- **Block Cipher**: Processing in fixed 64-bit blocks
+- **Network Feistel's**: Fundamental Structure of DES
+- **Permutations**: Controlled Bit Rearrangement
+- **S-Boxes**: Nonlinear Substitution for Security
+- **Key Generation**: Derivation of Multiple Subkeys
+- **Padding**: Handling Variable-Length Messages
+
+## References
+
+- FIPS 46-3: Data Encryption Standard (DES)
+- "Applied Cryptography" - Bruce Schneier
+- NIST Special Publication 800-67: Recommendation for the Triple Data Encryption Algorithm (TDEA) Block Cipher
+
+## Author
+
+Developed with ❤️ to demonstrate the fundamentals of symmetric encryption and block cipher algorithms.
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+---
+
+<details>
+<summary>🇧🇷 Versão em Português</summary>
+
+⭐ **If this project was useful to you, don't forget to give it a star.
+
 # Implementação DES (Data Encryption Standard) em Go
 
 ## Descrição do Projeto
@@ -157,8 +324,10 @@ Desenvolvido com ❤️ para demonstrar os fundamentos da criptografia simétric
 ## Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
-**Este projeto é disponibilizado para fins educacionais. Não utilize em ambientes de produção.**
+
 ---
 
 ⭐ **Se este projeto foi útil para você, não esqueça de dar uma estrela!** ⭐
+
+</details>
 
